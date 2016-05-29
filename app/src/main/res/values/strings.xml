@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Birthday Reminder</string>
+
+    <string name="contact_name_caption">Contact name</string>
+    <string name="no_birthday">No birthday available</string>
+    <string name="no_age">No age available</string>
+    <string name="age">%1$d years</string>
+
+    <!-- Permissions -->
+    <string name="permission_yeap">Thank you!</string>
+    <string name="permission_nope">We can\'t work if you don\'t give us the permission</string>
+    <string name="permission_give">Give the damn permissions!</string>
+</resources>

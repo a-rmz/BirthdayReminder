@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="10dp"
+              android:paddingRight="20dp"
+              android:paddingStart="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/contact_image_thumb"
+        android:src="@drawable/profile"
+        android:layout_marginRight="15dp"
+        android:layout_width="@dimen/contact_image_thumb"
+        android:layout_height="@dimen/contact_image_thumb"/>
+
+    <TextView
+        android:id="@+id/list_item_contact_name"
+        android:layout_toRightOf="@+id/contact_image_thumb"
+        android:text="@string/contact_name_caption"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"/>
+
+    <TextView
+        android:id="@+id/list_item_contact_birthday"
+        android:layout_toRightOf="@+id/contact_image_thumb"
+        android:layout_below="@+id/list_item_contact_name"
+        android:text="@string/no_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
