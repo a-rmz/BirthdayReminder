@@ -89,8 +89,6 @@ public class FragmentContactList extends ListFragment implements
         super.onActivityCreated(savedInstanceState);
 
         getLoaderManager().initLoader(0, null, this);
-        Log.v("Loader", "Finished");
-        Log.v("ArrayList", "Size: " + contacts.size());
 
         mContactAdapter = new ContactListAdapter(
                 this.getActivity(),
@@ -101,22 +99,16 @@ public class FragmentContactList extends ListFragment implements
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
-        Cursor contactCursor = (Cursor) getListAdapter().getItem(position);
-        System.out.println( contactCursor.getString(FragmentContactList.PHONE_INDEX));
+        Contact contact = (Contact) getListAdapter().getItem(position);
         FragmentContactDetail detail = (FragmentContactDetail) getFragmentManager().findFragmentByTag("detail");
         if (detail != null && detail.isInLayout()) {
-            detail.setContact(contactCursor);
+            detail.setContact(contact);
         }
-      else {
+        else {
             Intent intent = new Intent(
                     getActivity().getApplicationContext(),
                     ActivityDetail.class);
-            intent.putExtra("contactInfo", new String[] {
-                contactCursor.getString(FragmentContactList.DISPLAY_NAME_PRIMARY_INDEX),
-                contactCursor.getString(FragmentContactList.START_DATE_INDEX),
-                contactCursor.getString(FragmentContactList.PHOTO_URI_INDEX),
-                contactCursor.getString(FragmentContactList.PHONE_INDEX)}
-            );
+            intent.putExtra("contactInfo", contact);
             startActivity(intent);
         }
     }
@@ -137,9 +129,8 @@ public class FragmentContactList extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
-//        mCursorAdapter.changeCursor(data);
 
-        ContentResolver cr = getActivity().getContentResolver(); //getContnetResolver()
+        ContentResolver cr = getActivity().getContentResolver(); //getContentResolver()
 
         String [] PROJECTION_PHONE = {
                 Phone.CONTACT_ID,

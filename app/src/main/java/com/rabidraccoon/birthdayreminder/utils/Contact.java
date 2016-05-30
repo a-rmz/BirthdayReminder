@@ -16,12 +16,14 @@ public class Contact implements Parcelable {
     private String phone;
     private Uri photo;
 
-    public Contact() { }
+    public Contact() {
+        photo = null;
+    }
 
     public Contact(Parcel in) {
         String info[] = new String[5];
         in.readStringArray(info);
-        setID(Integer.getInteger(info[0]));
+        setID(Integer.parseInt(info[0]));
         setName(info[1]);
         setDate(info[2]);
         setPhone(info[3]);
@@ -72,7 +74,7 @@ public class Contact implements Parcelable {
     }
 
     public void setPhoto(Uri photo) {
-        this.photo = photo;
+        this.photo = (!photo.equals("")) ? photo : null;
     }
 
 
@@ -90,7 +92,7 @@ public class Contact implements Parcelable {
                 getName(),
                 getDate(),
                 getPhone(),
-                String.valueOf(getPhoto())
+                (getPhoto() != null) ? getPhoto().toString() : ""
         });
     }
 

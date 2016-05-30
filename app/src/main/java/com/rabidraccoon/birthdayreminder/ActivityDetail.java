@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import android.support.design.widget.FloatingActionButton;
+
+import com.rabidraccoon.birthdayreminder.utils.Contact;
 import com.rabidraccoon.birthdayreminder.utils.DateUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -35,10 +37,10 @@ public class ActivityDetail extends Activity {
         }
         setContentView(R.layout.activity_contact_detail);
 
-        String[] contactInfo = getIntent().getStringArrayExtra("contactInfo");
+        final Contact contact = getIntent().getParcelableExtra("contactInfo");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(contactInfo[0]);
+        toolbar.setTitle(contact.getName());
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
         setActionBar(toolbar);
@@ -46,27 +48,16 @@ public class ActivityDetail extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        TextView nameCaption = (TextView) findViewById(R.id.contact_detail_name);
-        TextView birthdayCaption = (TextView) findViewById(R.id.contact_detail_birthday);
-        TextView ageCaption = (TextView) findViewById(R.id.contact_detail_age);
-        nameCaption.setText(contactInfo[0]);
-        birthdayCaption.setText(DateUtils.toHuman(contactInfo[1]));
-        ageCaption.setText(getString(R.string.age, DateUtils.calculateAge(contactInfo[1])));
-
-        CircleImageView contactImage = (CircleImageView) findViewById(R.id.contact_detail_image);
-        if(contactInfo[2] != null) contactImage.setImageURI(Uri.parse(contactInfo[2]));
+        FragmentContactDetail fragment = (FragmentContactDetail) getFragmentManager().findFragmentByTag("detail");
+        fragment.setContact(contact);
+//        CircleImageView contactImage = (CircleImageView) findViewById(R.id.contact_detail_image);
+//        if(contact.getPhoto() != null) contactImage.setImageURI(contact.getPhoto());
+//        else contactImage.setImageDrawable(getResources().getDrawable(R.drawable.profile, null));
 
         sendMessage = (FloatingActionButton) findViewById(R.id.fab_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Happy Birthday!");
-                sendIntent.setType("text/plain");
-                sendIntent.setPackage("com.whatsapp");
-
-                startActivity(sendIntent);
 
             }
         });
