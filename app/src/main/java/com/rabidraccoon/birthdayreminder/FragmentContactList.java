@@ -3,10 +3,12 @@ package com.rabidraccoon.birthdayreminder;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -17,6 +19,8 @@ import android.provider.ContactsContract.CommonDataKinds.*;
 import android.widget.ListView;
 
 import com.rabidraccoon.birthdayreminder.adapters.ContactListAdapter;
+import com.rabidraccoon.birthdayreminder.utils.Contact;
+import com.rabidraccoon.birthdayreminder.utils.PhoneUtils;
 
 /**
  * Created by alex on 5/20/16.
@@ -129,7 +133,48 @@ public class FragmentContactList extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
-        mCursorAdapter.changeCursor(data);
+//        mCursorAdapter.changeCursor(data);
+
+        ContentResolver cr = getActivity().getContentResolver(); //getContnetResolver()
+
+        String [] PROJECTION_PHONE = {
+                Phone.CONTACT_ID,
+                Phone.NUMBER
+        };
+        String WHERE =
+                Phone.MIMETYPE + " = '" + Phone.CONTENT_ITEM_TYPE + "'"
+                + " AND " +
+                Phone.CONTACT_ID + " = ?";
+        Cursor phoneCursor;
+
+        while (data.moveToNext()) {
+            Contact contact = new Contact();
+
+            contact.setID(data.getInt(FragmentContactList.CONTACT_ID_INDEX));
+            contact.setDate(data.getString(FragmentContactList.START_DATE_INDEX));
+            contact.setName(data.getString(FragmentContactList.DISPLAY_NAME_PRIMARY_INDEX));
+            if(data.getString(FragmentContactList.PHOTO_URI_INDEX) != null)
+                contact.setPhoto(Uri.parse(data.getString(FragmentContactList.PHOTO_URI_INDEX)));
+
+
+
+            String [] SELECTION = { String.valueOf(contact.getID()) };
+
+            phoneCursor = cr.query(
+                    ContactsContract.Data.CONTENT_URI,
+                    PROJECTION_PHONE,
+                    WHERE,
+                    SELECTION,
+                    null
+            );
+
+            if (phoneCursor.getCount() > 0) {
+                phoneCursor.moveToNext();
+                contact.setPhone(PhoneUtils.formatPhone(phoneCursor.getString(1)));
+            }
+            phoneCursor.close();
+        }
+
     }
 
     @Override
