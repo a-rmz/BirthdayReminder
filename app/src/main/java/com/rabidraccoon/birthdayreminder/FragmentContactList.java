@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import android.widget.ListView;
 import com.rabidraccoon.birthdayreminder.adapters.ContactListAdapter;
 import com.rabidraccoon.birthdayreminder.utils.Contact;
 import com.rabidraccoon.birthdayreminder.utils.PhoneUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by alex on 5/20/16.
@@ -42,8 +45,6 @@ public class FragmentContactList extends ListFragment implements
             Event.TYPE + " = " + Event.TYPE_BIRTHDAY +
             " AND " +
             Event.MIMETYPE + " = '" + Event.CONTENT_ITEM_TYPE + "'" +
-//            " AND " +
-//            Phone.MIMETYPE + " = '" + Phone.CONTENT_ITEM_TYPE + "'" +
             " AND " +
             ContactsContract.Data.CONTACT_ID + " = " + Event.CONTACT_ID +
             " AND " +
@@ -69,10 +70,13 @@ public class FragmentContactList extends ListFragment implements
     public static final int PHONE_INDEX = 6;
 
     // Contact
-    ContactListAdapter mCursorAdapter;
+    ContactListAdapter mContactAdapter;
     Cursor cursor;
+    ArrayList<Contact> contacts;
 
-    public FragmentContactList() {}
+    public FragmentContactList() {
+        contacts = new ArrayList<>();
+    }
 
     @Nullable
     @Override
@@ -84,13 +88,14 @@ public class FragmentContactList extends ListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mCursorAdapter = new ContactListAdapter(
-                getActivity(),
-                cursor
-        );
-        // Sets the adapter for the ListView
-        setListAdapter(mCursorAdapter);
         getLoaderManager().initLoader(0, null, this);
+        Log.v("Loader", "Finished");
+        Log.v("ArrayList", "Size: " + contacts.size());
+
+        mContactAdapter = new ContactListAdapter(
+                this.getActivity(),
+                contacts
+        );
 
     }
 
@@ -118,7 +123,6 @@ public class FragmentContactList extends ListFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        mSelectionArgs[0] = "%" + mSearchString + "%";
 
         return new CursorLoader(
                 getActivity(),
@@ -173,13 +177,16 @@ public class FragmentContactList extends ListFragment implements
                 contact.setPhone(PhoneUtils.formatPhone(phoneCursor.getString(1)));
             }
             phoneCursor.close();
+            contacts.add(contact);
         }
 
+        // Sets the adapter for the ListView
+        setListAdapter(mContactAdapter);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // Delete the reference to the existing Cursor
-        mCursorAdapter.changeCursor(null);
+//        mContactAdapter.changeCursor(null);
     }
 }

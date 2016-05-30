@@ -12,6 +12,7 @@ public class Contact implements Parcelable {
     private int ID;
     private String name;
     private String date;
+    private String dateHuman;
     private String phone;
     private Uri photo;
 
@@ -49,8 +50,13 @@ public class Contact implements Parcelable {
         return date;
     }
 
+    public String getDateHuman() {
+        return dateHuman;
+    }
+
     public void setDate(String date) {
         this.date = date;
+        this.dateHuman = DateUtils.toHuman(date);
     }
 
     public String getPhone() {
