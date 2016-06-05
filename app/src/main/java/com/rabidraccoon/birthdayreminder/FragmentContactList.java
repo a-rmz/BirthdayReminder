@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +22,13 @@ import android.widget.ListView;
 
 import com.rabidraccoon.birthdayreminder.adapters.ContactListAdapter;
 import com.rabidraccoon.birthdayreminder.utils.Contact;
+import com.rabidraccoon.birthdayreminder.utils.DateUtils;
 import com.rabidraccoon.birthdayreminder.utils.PhoneUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by alex on 5/20/16.
@@ -71,11 +76,13 @@ public class FragmentContactList extends ListFragment implements
 
     // Contact
     ContactListAdapter mContactAdapter;
-    Cursor cursor;
     ArrayList<Contact> contacts;
+    boolean sortedByDate;
+
 
     public FragmentContactList() {
         contacts = new ArrayList<>();
+        sortedByDate = true;
     }
 
     @Nullable
@@ -170,7 +177,7 @@ public class FragmentContactList extends ListFragment implements
             phoneCursor.close();
             contacts.add(contact);
         }
-
+        sortByDate();
         // Sets the adapter for the ListView
         setListAdapter(mContactAdapter);
     }
@@ -179,5 +186,48 @@ public class FragmentContactList extends ListFragment implements
     public void onLoaderReset(Loader<Cursor> loader) {
         // Delete the reference to the existing Cursor
 //        mContactAdapter.changeCursor(null);
+    }
+
+    public boolean sort() {
+        System.out.println("Sorting... byDate: " + sortedByDate);
+        if(sortedByDate) {
+            sortByName();
+            System.out.println("By name");
+        } else {
+            sortByDate();
+            System.out.println("By date");
+        }
+        sortedByDate = !sortedByDate;
+        System.out.println("Sorted byDate: " + sortedByDate);
+        return sortedByDate;
+    }
+
+    public void sortByName() {
+        // Sort the ArrayList
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact lhs, Contact rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+        mContactAdapter.notifyDataSetChanged();
+    }
+
+    public void sortByDate() {
+        // Sort the ArrayList
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact lhs, Contact rhs) {
+                int monthComparison = DateUtils.isSameMonth(
+                        DateUtils.getMonth(lhs.getDate()),
+                        DateUtils.getMonth(rhs.getDate())
+                );
+                if(monthComparison != 0) return monthComparison;
+                else
+                    return ( DateUtils.getDay(lhs.getDate()) < DateUtils.getDay(rhs.getDate()) ) ? -1 :
+                            ( DateUtils.getDay(lhs.getDate()) == DateUtils.getDay(rhs.getDate()) ) ? 0 : 1;
+            }
+        });
+        mContactAdapter.notifyDataSetChanged();
     }
 }

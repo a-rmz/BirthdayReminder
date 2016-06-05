@@ -50,9 +50,6 @@ public class ActivityDetail extends Activity {
 
         FragmentContactDetail fragment = (FragmentContactDetail) getFragmentManager().findFragmentByTag("detail");
         fragment.setContact(contact);
-//        CircleImageView contactImage = (CircleImageView) findViewById(R.id.contact_detail_image);
-//        if(contact.getPhoto() != null) contactImage.setImageURI(contact.getPhoto());
-//        else contactImage.setImageDrawable(getResources().getDrawable(R.drawable.profile, null));
 
         sendMessage = (FloatingActionButton) findViewById(R.id.fab_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {

@@ -23,7 +23,6 @@ public class DateUtils {
     };
 
     public static String toHuman(String date) {
-
         int month = Integer.parseInt(date.substring(5, 7));
         int day = Integer.parseInt(date.substring(8, 10));
 
@@ -50,5 +49,18 @@ public class DateUtils {
 
         return age;
     }
+
+    public static int getDay(String date) {
+        return Integer.parseInt(date.substring(8, 10));
+    }
+
+    public static int getMonth(String date) {
+        return Integer.parseInt(date.substring(5, 7));
+    }
+
+    public static int isSameMonth(int month1, int month2) {
+        return month1 - month2;
+    }
+
 
 }
