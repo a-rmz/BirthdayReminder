@@ -15,6 +15,10 @@ public class Contact implements Parcelable {
     private String dateHuman;
     private String phone;
     private Uri photo;
+    // Birthday
+    private int day;
+    private int month;
+    private int year;
 
     public Contact() {
         photo = null;
@@ -59,6 +63,9 @@ public class Contact implements Parcelable {
     public void setDate(String date) {
         this.date = date;
         this.dateHuman = DateUtils.toHuman(date);
+        this.day = DateUtils.getDay(date);
+        this.month = DateUtils.getMonth(date);
+        this.year = DateUtils.getYear(date);
     }
 
     public String getPhone() {
@@ -75,6 +82,18 @@ public class Contact implements Parcelable {
 
     public void setPhoto(Uri photo) {
         this.photo = (!photo.equals("")) ? photo : null;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
     }
 
 

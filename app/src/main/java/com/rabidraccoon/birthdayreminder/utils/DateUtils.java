@@ -23,16 +23,16 @@ public class DateUtils {
     };
 
     public static String toHuman(String date) {
-        int month = Integer.parseInt(date.substring(5, 7));
-        int day = Integer.parseInt(date.substring(8, 10));
+        int month = getMonth(date);
+        int day = getDay(date);
 
         return months_en[month-1] + ", " + day;
     }
 
     public static int calculateAge(String dateString) {
-        int year = Integer.parseInt(dateString.substring(0, 4));
-        int month = Integer.parseInt(dateString.substring(5, 7));
-        int day = Integer.parseInt(dateString.substring(8, 10));
+        int year = getYear(dateString);
+        int month = getMonth(dateString);
+        int day = getDay(dateString);
 
 
         Calendar dob = Calendar.getInstance();
@@ -58,8 +58,16 @@ public class DateUtils {
         return Integer.parseInt(date.substring(5, 7));
     }
 
+    public static int getYear(String date) {
+        return Integer.parseInt(date.substring(0, 4));
+    }
+
     public static int isSameMonth(int month1, int month2) {
         return month1 - month2;
+    }
+
+    public static boolean isItsBirthday(int day, int todayDay, int month, int todayMonth) {
+        return (day == todayDay) && (month == todayMonth);
     }
 
 

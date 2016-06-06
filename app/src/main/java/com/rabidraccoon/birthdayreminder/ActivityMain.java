@@ -2,6 +2,9 @@ package com.rabidraccoon.birthdayreminder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +13,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toolbar;
+
+import com.rabidraccoon.birthdayreminder.utils.NotifService;
+
+import java.util.Calendar;
 
 public class ActivityMain extends Activity {
 

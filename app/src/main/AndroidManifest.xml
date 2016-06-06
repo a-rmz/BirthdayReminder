@@ -23,6 +23,7 @@
         <activity android:name=".ActivityDetail">
 
         </activity>
+        <service android:name=".utils.NotifService"/>
     </application>
 
 </manifest>

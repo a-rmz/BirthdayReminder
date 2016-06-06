@@ -1,8 +1,11 @@
 package com.rabidraccoon.birthdayreminder;
 
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -23,9 +26,11 @@ import android.widget.ListView;
 import com.rabidraccoon.birthdayreminder.adapters.ContactListAdapter;
 import com.rabidraccoon.birthdayreminder.utils.Contact;
 import com.rabidraccoon.birthdayreminder.utils.DateUtils;
+import com.rabidraccoon.birthdayreminder.utils.NotifService;
 import com.rabidraccoon.birthdayreminder.utils.PhoneUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -180,6 +185,30 @@ public class FragmentContactList extends ListFragment implements
         sortByDate();
         // Sets the adapter for the ListView
         setListAdapter(mContactAdapter);
+
+        // Notifications
+        // TEST
+        Intent myIntent = new Intent(getActivity() , NotifService.class);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Activity.ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, myIntent, 0);
+        // Calendar instance to define alarm hour
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(calendar.getTimeInMillis());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 15);
+        calendar.set(Calendar.HOUR, 6);
+        calendar.set(Calendar.AM_PM, Calendar.PM);
+        // Repeating alarm for each day
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                pendingIntent);
+        // Start the Service
+        Intent notif = new Intent(getActivity().getApplicationContext(), NotifService.class);
+        notif.putExtra("contacts", contacts);
+//        if(getActivity().stopService(notif)) {
+            getActivity().startService(notif);
+//        }
     }
 
     @Override
@@ -229,5 +258,9 @@ public class FragmentContactList extends ListFragment implements
             }
         });
         mContactAdapter.notifyDataSetChanged();
+    }
+
+    public ArrayList<Contact> getContacts() {
+        return this.contacts;
     }
 }
