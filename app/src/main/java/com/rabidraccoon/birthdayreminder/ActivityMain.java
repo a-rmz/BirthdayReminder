@@ -20,8 +20,6 @@ import java.util.Calendar;
 
 public class ActivityMain extends Activity {
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-
     Toolbar toolbar;
 
 
@@ -30,8 +28,11 @@ public class ActivityMain extends Activity {
         super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            finish();
+            Intent permissions = new Intent(ActivityMain.this, ActivityPermissions.class);
+            startActivity(permissions);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+
         }
         setContentView(R.layout.activity_main);
 
@@ -64,19 +65,7 @@ public class ActivityMain extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Snackbar.make(findViewById(R.id.activity_main), getString(R.string.permission_yeap), Snackbar.LENGTH_SHORT).show();
-            } else {
-                setContentView(R.layout.no_permissions);
-                Snackbar.make(findViewById(R.id.activity_main), getString(R.string.permission_nope), Snackbar.LENGTH_SHORT).show();
-            }
-        }
-    }
+
 
 
 }
