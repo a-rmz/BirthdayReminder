@@ -19,6 +19,8 @@ import java.util.Calendar;
  */
 public class NotifService extends Service {
 
+    ArrayList<Contact> bd;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,28 +28,21 @@ public class NotifService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ArrayList<Contact> bd = (ArrayList<Contact>) intent.getExtras().get("contacts");
-        if(bd != null) {
-            Contact c = new Contact();
-            c.setName("Ragnar");
-            c.setPhone("0000000000");
-            c.setID(0);
-            c.setDate("1320-06-05");
-            bd.add(c);
-            c = new Contact();
-            c.setID(1);
-            c.setDate("1320-06-05");
-            c.setName("Baldur");
-            bd.add(c);
-            validateBirthdays(bd);
-        }
-        return START_NOT_STICKY;
+        bd = (intent != null) ? (ArrayList<Contact>) intent.getExtras().get("contacts") : null;
+        if(bd != null) validateBirthdays(bd);
+        return START_STICKY;
     }
 
     private void validateBirthdays(ArrayList<Contact> birthdays) {
         Calendar today = Calendar.getInstance();
         int month = today.get(Calendar.MONTH) + 1;
         int day = today.get(Calendar.DAY_OF_MONTH);
+
+        Contact c = new Contact();
+        c.setName("Torstein");
+        c.setID(0);
+        c.setDate("1200-06-19");
+        birthdays.add(c);
 
         for(Contact contact : birthdays) {
 

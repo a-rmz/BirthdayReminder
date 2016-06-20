@@ -195,20 +195,18 @@ public class FragmentContactList extends ListFragment implements
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(calendar.getTimeInMillis());
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 15);
-        calendar.set(Calendar.HOUR, 6);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 9);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
         // Repeating alarm for each day
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                60*1000,
                 pendingIntent);
         // Start the Service
         Intent notif = new Intent(getActivity().getApplicationContext(), NotifService.class);
         notif.putExtra("contacts", contacts);
-//        if(getActivity().stopService(notif)) {
-            getActivity().startService(notif);
-//        }
+        getActivity().startService(notif);
     }
 
     @Override
