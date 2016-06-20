@@ -40,7 +40,6 @@ public class NotifService extends Service {
         Calendar today = Calendar.getInstance();
         int month = today.get(Calendar.MONTH) + 1;
         int day = today.get(Calendar.DAY_OF_MONTH);
-
         
         for(Contact contact : birthdays) {
 
