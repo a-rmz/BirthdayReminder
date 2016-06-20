@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.rabidraccoon.birthdayreminder.ActivityMain;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 

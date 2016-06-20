@@ -187,8 +187,8 @@ public class FragmentContactList extends ListFragment implements
         setListAdapter(mContactAdapter);
 
         // Notifications
-        // TEST
         Intent myIntent = new Intent(getActivity() , NotifService.class);
+        myIntent.putExtra("contacts", contacts);
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Activity.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, myIntent, 0);
         // Calendar instance to define alarm hour
@@ -201,12 +201,10 @@ public class FragmentContactList extends ListFragment implements
         // Repeating alarm for each day
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 calendar.getTimeInMillis(),
-                60*1000,
+                AlarmManager.INTERVAL_DAY,
                 pendingIntent);
         // Start the Service
-        Intent notif = new Intent(getActivity().getApplicationContext(), NotifService.class);
-        notif.putExtra("contacts", contacts);
-        getActivity().startService(notif);
+        getActivity().startService(myIntent);
     }
 
     @Override
