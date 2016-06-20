@@ -41,17 +41,12 @@ public class NotifService extends Service {
         int month = today.get(Calendar.MONTH) + 1;
         int day = today.get(Calendar.DAY_OF_MONTH);
 
-        Contact c = new Contact();
-        c.setName("Torstein");
-        c.setID(0);
-        c.setDate("1200-06-19");
-        birthdays.add(c);
-
+        
         for(Contact contact : birthdays) {
 
             if(DateUtils.isItsBirthday(contact.getDay(), day, contact.getMonth(), month)) {
                 Intent startIntent = new Intent(this, ActivityMain.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, startIntent, 0);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, contact.getID(), startIntent, 0);
 
                 // Build the notification
                 Notification notification = new Notification.Builder(getApplicationContext())
