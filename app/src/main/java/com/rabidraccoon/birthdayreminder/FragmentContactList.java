@@ -1,7 +1,6 @@
 package com.rabidraccoon.birthdayreminder;
 
 
-
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.ListFragment;
