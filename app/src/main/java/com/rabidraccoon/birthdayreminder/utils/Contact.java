@@ -68,6 +68,12 @@ public class Contact implements Parcelable {
         this.year = DateUtils.getYear(date);
     }
 
+    public void setDate(int day, int month, int year) {
+        this.day = day;
+        this.month = month;
+        this.year = year;
+    }
+
     public String getPhone() {
         return phone;
     }

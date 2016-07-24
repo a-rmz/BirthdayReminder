@@ -27,7 +27,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     ContactContract.ContactEntry.KEY_NAME    + " TEXT NOT NULL, " +
                     ContactContract.ContactEntry.KEY_DAY     + " INTEGER NOT NULL, " +
                     ContactContract.ContactEntry.KEY_MONTH   + " INTEGER NOT NULL, " +
-                    ContactContract.ContactEntry.KEY_YEAR    + " NUMBER, " +
+                    ContactContract.ContactEntry.KEY_YEAR    + " INTEGER, " +
                     ContactContract.ContactEntry.KEY_PHONE   + " TEXT, " +
                     ContactContract.ContactEntry.KEY_PHOTO   + " TEXT)";
         sqLiteDatabase.execSQL(CREATE_DB);
