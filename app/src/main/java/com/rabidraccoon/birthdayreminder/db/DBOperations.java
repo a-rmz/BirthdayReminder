@@ -9,10 +9,16 @@ import android.net.Uri;
 import com.rabidraccoon.birthdayreminder.utils.Contact;
 import com.rabidraccoon.birthdayreminder.utils.DateUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by a-rmz on 7/23/16.
  */
 public class DBOperations {
+
+    public static final int SORT_BY_NAME = 0;
+    public static final int SORT_BY_DATE = 1;
 
     DBHandler dbHandler;
 
@@ -33,12 +39,10 @@ public class DBOperations {
         newContact.put(ContactContract.ContactEntry.KEY_PHONE, phone);
         newContact.put(ContactContract.ContactEntry.KEY_PHOTO, photo);
 
-        long newRowID = db.insert(
+        return db.insert(
                 ContactContract.ContactEntry.TABLE_CONTACT,
                 null,
                 newContact);
-
-        return newRowID;
 
     }
 
@@ -71,13 +75,11 @@ public class DBOperations {
         String SELECTION = ContactContract.ContactEntry._ID + " LIKE ?";
         String SELECTION_ARGS[] = {String.valueOf(ID)};
 
-        int count = db.update(
+        return db.update(
                 ContactContract.ContactEntry.TABLE_CONTACT,
                 newContact,
                 SELECTION,
                 SELECTION_ARGS);
-
-        return count;
 
     }
 
@@ -106,6 +108,8 @@ public class DBOperations {
                 null
         );
 
+        contactCursor.close();
+
         contact.setID(ID);
         contact.setName(contactCursor.getString(0));
         contact.setDate(contactCursor.getInt(1), contactCursor.getInt(2), contactCursor.getInt(3));
@@ -113,6 +117,67 @@ public class DBOperations {
         contact.setPhoto(Uri.parse(contactCursor.getString(5)));
 
         return contact;
+    }
+
+    public Cursor getContactsCursor(int SORT_ORDER) {
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        String PROJECTION[] = {
+                ContactContract.ContactEntry.KEY_NAME,  // 0
+                ContactContract.ContactEntry.KEY_DAY,   // 1
+                ContactContract.ContactEntry.KEY_MONTH, // 2
+                ContactContract.ContactEntry.KEY_YEAR,  // 3
+                ContactContract.ContactEntry.KEY_PHONE, // 4
+                ContactContract.ContactEntry.KEY_PHOTO  // 5
+        };
+
+        String ORDER = (SORT_ORDER == SORT_BY_NAME) ?
+                ContactContract.ContactEntry.KEY_NAME + " ASC" : // SORT_BY_NAME
+                // Sorts first by month, then by day
+                ContactContract.ContactEntry.KEY_MONTH + " ASC, " + ContactContract.ContactEntry.KEY_DAY + " ASC"; // SORT_BY_DATE
+
+
+        return db.query(
+                ContactContract.ContactEntry.TABLE_CONTACT,
+                PROJECTION,
+                null,
+                null,
+                null,
+                null,
+                ORDER
+        );
+
+    }
+
+    public List<Integer> getContactIDs() {
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        List<Integer> ids = null;
+
+        String PROJECTION[] = {
+                ContactContract.ContactEntry._ID
+        };
+
+        Cursor cursor = db.query(
+                ContactContract.ContactEntry.TABLE_CONTACT,
+                PROJECTION,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+
+        if (cursor != null && cursor.moveToFirst()) {
+            ids = new ArrayList<>();
+            do {
+                ids.add(cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+
+        return ids;
+
     }
 
 }
