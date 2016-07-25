@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 /**
  * Created by alex on 5/29/16.
  */
@@ -73,6 +75,7 @@ public class Contact implements Parcelable {
         this.month = month;
         this.year = year;
         this.date = day + "-" + month + "-" + ((this.year != 0) ? year : "-");
+        this.dateHuman = DateUtils.toHuman(day, month);
     }
 
     public String getPhone() {
