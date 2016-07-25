@@ -115,13 +115,13 @@ public class FragmentContactList extends ListFragment  {
                     localdb.getContactsCursor(DBOperations.SORT_BY_NAME)
             );
         } else {
-            // Sort by date
-            mContactAdapter.changeCursor(
-                    localdb.getContactsCursor(DBOperations.SORT_BY_DATE)
+                // Sort by date
+                mContactAdapter.changeCursor(
+                        localdb.getContactsCursor(DBOperations.SORT_BY_DATE)
             );
         }
-        sortedByDate = !sortedByDate;
-        return sortedByDate;
+            sortedByDate = !sortedByDate;
+            return sortedByDate;
     }
 
 

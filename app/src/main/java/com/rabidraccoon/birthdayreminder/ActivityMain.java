@@ -50,9 +50,9 @@ public class ActivityMain extends Activity {
         switch (item.getItemId()) {
             case R.id.action_sort:
                 if(((FragmentContactList) getFragmentManager().findFragmentByTag("list")).sort()) {
-                    item.setTitle(getString(R.string.sort_by_date));
-                } else {
                     item.setTitle(getString(R.string.sort_by_name));
+                } else {
+                    item.setTitle(getString(R.string.sort_by_date));
                 }
                 break;
         }
