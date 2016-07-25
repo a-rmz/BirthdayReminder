@@ -25,7 +25,7 @@ public class ContactCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return LayoutInflater.from(context).inflate(R.layout.contact_adapter_view, null);
+        return LayoutInflater.from(context).inflate(R.layout.contact_adapter_view, viewGroup, false);
     }
 
     @Override

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:paddingRight="20dp"
-              android:paddingStart="20dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+        android:orientation="vertical"
+        style="@style/AppTheme"
+        android:padding="15dp"
+        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contact_image_thumb"
         android:src="@drawable/profile"
         android:layout_marginRight="15dp"
@@ -19,6 +20,7 @@
         android:layout_toRightOf="@+id/contact_image_thumb"
         android:text="@string/contact_name_caption"
         style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textColor="@color/contactNamePrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"/>
@@ -28,6 +30,7 @@
         android:layout_toRightOf="@+id/contact_image_thumb"
         android:layout_below="@+id/list_item_contact_name"
         android:text="@string/no_birthday"
+        android:textColor="@color/contactNameSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

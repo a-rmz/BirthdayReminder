@@ -6,4 +6,9 @@
     <color name="colorAccent">#ffab00</color>
     <color name="colorNavigationBar">#37474f</color>
     <color name="foreground_material_light">#000000</color>
+
+    <!-- Text colours -->
+    <color name="contactNamePrimary">#4D4D4D</color>
+    <color name="contactNameSecondary">#7A7A7A</color>
+
 </resources>
