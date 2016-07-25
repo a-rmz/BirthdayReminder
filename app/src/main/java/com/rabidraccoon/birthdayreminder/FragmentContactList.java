@@ -107,6 +107,24 @@ public class FragmentContactList extends ListFragment  {
         }
     }
 
+    public boolean sort() {
+        DBOperations localdb = new DBOperations(getActivity());
+        if(sortedByDate) {
+            // Sort by name
+            mContactAdapter.changeCursor(
+                    localdb.getContactsCursor(DBOperations.SORT_BY_NAME)
+            );
+        } else {
+            // Sort by date
+            mContactAdapter.changeCursor(
+                    localdb.getContactsCursor(DBOperations.SORT_BY_DATE)
+            );
+        }
+        sortedByDate = !sortedByDate;
+        return sortedByDate;
+    }
+
+
     private class ContactLoader extends AsyncTask<Void, Void, Void> {
 
         @Override
