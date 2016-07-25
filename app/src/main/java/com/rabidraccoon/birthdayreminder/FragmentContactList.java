@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -23,7 +24,9 @@ import android.view.ViewGroup;
 import android.provider.ContactsContract.CommonDataKinds.*;
 import android.widget.ListView;
 
+import com.rabidraccoon.birthdayreminder.adapters.ContactCursorAdapter;
 import com.rabidraccoon.birthdayreminder.adapters.ContactListAdapter;
+import com.rabidraccoon.birthdayreminder.db.DBOperations;
 import com.rabidraccoon.birthdayreminder.utils.Contact;
 import com.rabidraccoon.birthdayreminder.utils.DateUtils;
 import com.rabidraccoon.birthdayreminder.utils.NotifService;
@@ -34,37 +37,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by alex on 5/20/16.
  */
-public class FragmentContactList extends ListFragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentContactList extends ListFragment  {
 
     // CursorAdapter
-    private static final String PROJECTION[] = {
-            ContactsContract.Data._ID,                  // 0
-            ContactsContract.Data.CONTACT_ID,           // 1
-            ContactsContract.Data.LOOKUP_KEY,           // 2
-            ContactsContract.Data.DISPLAY_NAME_PRIMARY, // 3
-            ContactsContract.Data.PHOTO_URI,            // 4
-            Event.START_DATE,                           // 5
-            Phone.NUMBER                                // 6
-    };
-    private static final String SELECTION =
-            Event.TYPE + " = " + Event.TYPE_BIRTHDAY +
-            " AND " +
-            Event.MIMETYPE + " = '" + Event.CONTENT_ITEM_TYPE + "'" +
-            " AND " +
-            ContactsContract.Data.CONTACT_ID + " = " + Event.CONTACT_ID +
-            " AND " +
-            ContactsContract.Data.CONTACT_ID + " = " + Phone.CONTACT_ID +
-            " AND " +
-            Phone.CONTACT_ID + " = " + Event.CONTACT_ID
-            ;
-
-    private String mSearchString = null;
-    private String mSelectionArgs[] = { mSearchString };
 
     // The column index for the _ID column
     public static final int CONTACT_ID_INDEX = 1;
@@ -80,7 +60,8 @@ public class FragmentContactList extends ListFragment implements
     public static final int PHONE_INDEX = 6;
 
     // Contact
-    ContactListAdapter mContactAdapter;
+//    ContactListAdapter mContactAdapter;
+    ContactCursorAdapter mContactAdapter;
     ArrayList<Contact> contacts;
     boolean sortedByDate;
 
@@ -100,13 +81,14 @@ public class FragmentContactList extends ListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(0, null, this);
+//        getLoaderManager().initLoader(0, null, this);
 
-        mContactAdapter = new ContactListAdapter(
-                this.getActivity(),
-                contacts
-        );
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        new ContactLoader().execute();
     }
 
     @Override
@@ -124,6 +106,124 @@ public class FragmentContactList extends ListFragment implements
             startActivity(intent);
         }
     }
+
+    private class ContactLoader extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            // Query device's db for contacts
+            ContentResolver contentResolver = getActivity().getContentResolver();
+
+            String PROJECTION_DEV[] = {
+                    ContactsContract.Data._ID,                  // 0
+                    ContactsContract.Data.CONTACT_ID,           // 1
+                    ContactsContract.Data.LOOKUP_KEY,           // 2
+                    ContactsContract.Data.DISPLAY_NAME_PRIMARY, // 3
+                    ContactsContract.Data.PHOTO_URI,            // 4
+                    Event.START_DATE,                           // 5
+                    Phone.NUMBER                                // 6
+            };
+
+            String SELECTION_DEV =
+                    Event.TYPE + " = " + Event.TYPE_BIRTHDAY +
+                    " AND " +
+                    Event.MIMETYPE + " = '" + Event.CONTENT_ITEM_TYPE + "'" +
+                    " AND " +
+                    ContactsContract.Data.CONTACT_ID + " = " + Event.CONTACT_ID +
+                    " AND " +
+                    ContactsContract.Data.CONTACT_ID + " = " + Phone.CONTACT_ID +
+                    " AND " +
+                    Phone.CONTACT_ID + " = " + Event.CONTACT_ID;
+
+            Cursor deviceContacts = contentResolver.query(
+                    ContactsContract.Data.CONTENT_URI,
+                    PROJECTION_DEV,
+                    SELECTION_DEV,
+                    null,
+                    null
+            );
+
+            // Query local db for already stored contacts' IDs
+            DBOperations localdb = new DBOperations(getActivity());
+//            localdb.resetDB();
+
+            List<Integer> localContacts = localdb.getContactIDs();
+
+            // Compare existing vs local and add them to pending list
+            List<Integer> pending = new ArrayList<>();
+            while(deviceContacts != null && deviceContacts.moveToNext()) {
+
+                System.out.println("ID: " + deviceContacts.getInt(CONTACT_ID_INDEX) +
+                        " - " + deviceContacts.getString(DISPLAY_NAME_PRIMARY_INDEX) +
+                        " || Exists: " + localContacts.contains(deviceContacts.getInt(CONTACT_ID_INDEX)));
+
+                if(!localContacts.contains(deviceContacts.getInt(CONTACT_ID_INDEX))) {
+                    pending.add(deviceContacts.getPosition());
+                }
+            }
+
+            // Query pending contacts and add them to local db as long as there are pending
+            if(pending.size() >= 1) {
+                String [] PROJECTION_PHONE = {
+                        Phone.CONTACT_ID,
+                        Phone.NUMBER
+                };
+                String WHERE_PHONE =
+                        Phone.MIMETYPE + " = '" + Phone.CONTENT_ITEM_TYPE + "'"
+                                + " AND " +
+                                Phone.CONTACT_ID + " = ?";
+                Cursor phoneCursor;
+
+
+                for (int i = 0; deviceContacts!=null &&  deviceContacts.moveToFirst() && i < pending.size(); i++) {
+
+                    deviceContacts.move(pending.get(i));
+                    System.out.println("ID selected: " + deviceContacts.getInt(0));
+                    String [] SELECTION_PHONE = { String.valueOf(deviceContacts.getInt(0)) };
+
+                    phoneCursor = contentResolver.query(
+                            ContactsContract.Data.CONTENT_URI,
+                            PROJECTION_PHONE,
+                            WHERE_PHONE,
+                            SELECTION_PHONE,
+                            null
+                    );
+
+                    if (phoneCursor.getCount() > 0) {
+                        phoneCursor.moveToNext();
+                        System.out.println("Columns in phoneCursor: " + phoneCursor.getString(1));
+                    }
+
+                    localdb.addContact(
+                            deviceContacts.getInt(FragmentContactList.CONTACT_ID_INDEX),
+                            deviceContacts.getString(FragmentContactList.DISPLAY_NAME_PRIMARY_INDEX),
+                            deviceContacts.getString(FragmentContactList.START_DATE_INDEX),
+                            (phoneCursor.getCount() > 0) ? PhoneUtils.formatPhone(phoneCursor.getString(1)) : null,
+                            deviceContacts.getString(FragmentContactList.PHOTO_URI_INDEX)
+                    );
+                    phoneCursor.close();
+                }
+
+                deviceContacts.close();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            DBOperations localdb = new DBOperations(getActivity());
+            mContactAdapter = new ContactCursorAdapter(
+                    getActivity(),
+                    localdb.getContactsCursor(DBOperations.SORT_BY_DATE),
+                    false
+                );
+            setListAdapter(mContactAdapter);
+        }
+    }
+
+    /*
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -255,7 +355,7 @@ public class FragmentContactList extends ListFragment implements
         });
         mContactAdapter.notifyDataSetChanged();
     }
-
+*/
     public ArrayList<Contact> getContacts() {
         return this.contacts;
     }

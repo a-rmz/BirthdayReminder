@@ -29,6 +29,10 @@ public class DateUtils {
         return months_en[month-1] + ", " + day;
     }
 
+    public static String toHuman(int day, int month) {
+        return months_en[month-1] + ", " + day;
+    }
+
     public static int calculateAge(String dateString) {
         int year = getYear(dateString);
         int month = getMonth(dateString);

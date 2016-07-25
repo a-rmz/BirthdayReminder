@@ -23,7 +23,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_DB =
                 "CREATE TABLE " + ContactContract.ContactEntry.TABLE_CONTACT + " (" +
-                    ContactContract.ContactEntry._ID         + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ContactContract.ContactEntry._ID         + " INTEGER PRIMARY KEY, " +
                     ContactContract.ContactEntry.KEY_NAME    + " TEXT NOT NULL, " +
                     ContactContract.ContactEntry.KEY_DAY     + " INTEGER NOT NULL, " +
                     ContactContract.ContactEntry.KEY_MONTH   + " INTEGER NOT NULL, " +
@@ -44,12 +44,18 @@ public class DBHandler extends SQLiteOpenHelper {
         // by comparing oldVersion and newVersion values.
         // The simplest case is to drop the old table and
         // create a new one.
-        sqLiteDatabase.execSQL("DROP TABLE IF IT EXISTS " + ContactContract.ContactEntry.TABLE_CONTACT);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ContactContract.ContactEntry.TABLE_CONTACT);
         // Create a new one.
         onCreate(sqLiteDatabase);
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    public void onReset(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + ContactContract.ContactEntry.TABLE_CONTACT);
+        // Create a new one.
+        onCreate(db);
     }
 }

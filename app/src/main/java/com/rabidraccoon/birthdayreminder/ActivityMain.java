@@ -49,11 +49,11 @@ public class ActivityMain extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort:
-                if(((FragmentContactList) getFragmentManager().findFragmentByTag("list")).sort()) {
-                    item.setTitle(getString(R.string.sort_by_name));
-                } else {
-                    item.setTitle(getString(R.string.sort_by_date));
-                }
+//                if(((FragmentContactList) getFragmentManager().findFragmentByTag("list")).sort()) {
+//                    item.setTitle(getString(R.string.sort_by_name));
+//                } else {
+//                    item.setTitle(getString(R.string.sort_by_date));
+//                }
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -26,12 +26,13 @@ public class DBOperations {
         dbHandler = new DBHandler(context);
     }
 
-    public long addContact(String name, String date, String phone, String photo) {
+    public long addContact(int ID, String name, String date, String phone, String photo) {
         // Gets the data repository in write mode
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
         ContentValues newContact = new ContentValues();
 
+        newContact.put(ContactContract.ContactEntry._ID, ID);
         newContact.put(ContactContract.ContactEntry.KEY_NAME, name);
         newContact.put(ContactContract.ContactEntry.KEY_DAY, DateUtils.getDay(date));
         newContact.put(ContactContract.ContactEntry.KEY_MONTH, DateUtils.getMonth(date));
@@ -123,12 +124,13 @@ public class DBOperations {
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
         String PROJECTION[] = {
-                ContactContract.ContactEntry.KEY_NAME,  // 0
-                ContactContract.ContactEntry.KEY_DAY,   // 1
-                ContactContract.ContactEntry.KEY_MONTH, // 2
-                ContactContract.ContactEntry.KEY_YEAR,  // 3
-                ContactContract.ContactEntry.KEY_PHONE, // 4
-                ContactContract.ContactEntry.KEY_PHOTO  // 5
+                ContactContract.ContactEntry._ID,       // 0
+                ContactContract.ContactEntry.KEY_NAME,  // 1
+                ContactContract.ContactEntry.KEY_DAY,   // 2
+                ContactContract.ContactEntry.KEY_MONTH, // 3
+                ContactContract.ContactEntry.KEY_YEAR,  // 4
+                ContactContract.ContactEntry.KEY_PHONE, // 5
+                ContactContract.ContactEntry.KEY_PHOTO  // 6
         };
 
         String ORDER = (SORT_ORDER == SORT_BY_NAME) ?
@@ -152,7 +154,7 @@ public class DBOperations {
     public List<Integer> getContactIDs() {
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
-        List<Integer> ids = null;
+        List<Integer> ids = new ArrayList<>();
 
         String PROJECTION[] = {
                 ContactContract.ContactEntry._ID
@@ -170,7 +172,6 @@ public class DBOperations {
 
 
         if (cursor != null && cursor.moveToFirst()) {
-            ids = new ArrayList<>();
             do {
                 ids.add(cursor.getInt(0));
             } while (cursor.moveToNext());
@@ -178,6 +179,13 @@ public class DBOperations {
 
         return ids;
 
+    }
+
+    public void resetDB() {
+        SQLiteDatabase db = dbHandler.getWritableDatabase();
+        dbHandler.onReset(
+                db
+        );
     }
 
 }
