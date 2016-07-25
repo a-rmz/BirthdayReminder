@@ -37,10 +37,11 @@ public class ActivityDetail extends Activity {
         }
         setContentView(R.layout.activity_contact_detail);
 
-        final Contact contact = getIntent().getParcelableExtra("contactInfo");
+        int ID = getIntent().getIntExtra("contactID", 0);
+        String name = getIntent().getStringExtra("contactName");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(contact.getName());
+        toolbar.setTitle(name);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
         setActionBar(toolbar);
@@ -49,7 +50,7 @@ public class ActivityDetail extends Activity {
 
 
         FragmentContactDetail fragment = (FragmentContactDetail) getFragmentManager().findFragmentByTag("detail");
-        fragment.setContact(contact);
+        fragment.setContact(ID);
 
         sendMessage = (FloatingActionButton) findViewById(R.id.fab_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {

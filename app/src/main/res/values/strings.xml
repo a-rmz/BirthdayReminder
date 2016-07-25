@@ -5,6 +5,7 @@
     <string name="no_birthday">No birthday available</string>
     <string name="no_age">No age available</string>
     <string name="age">%1$d years</string>
+    <string name="no_year_prov">No year provided :(</string>
 
     <!-- Permissions -->
     <string name="permission_start">Let\'s get started</string>

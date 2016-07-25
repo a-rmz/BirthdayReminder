@@ -36,7 +36,7 @@ public class DBOperations {
         newContact.put(ContactContract.ContactEntry.KEY_NAME, name);
         newContact.put(ContactContract.ContactEntry.KEY_DAY, DateUtils.getDay(date));
         newContact.put(ContactContract.ContactEntry.KEY_MONTH, DateUtils.getMonth(date));
-        newContact.put(ContactContract.ContactEntry.KEY_YEAR, DateUtils.getYear(date));
+        newContact.put(ContactContract.ContactEntry.KEY_YEAR, (DateUtils.getYear(date) != -1) ? DateUtils.getYear(date) : null);
         newContact.put(ContactContract.ContactEntry.KEY_PHONE, phone);
         newContact.put(ContactContract.ContactEntry.KEY_PHOTO, photo);
 
@@ -109,13 +109,13 @@ public class DBOperations {
                 null
         );
 
-        contactCursor.close();
-
+        contactCursor.moveToFirst();
         contact.setID(ID);
         contact.setName(contactCursor.getString(0));
         contact.setDate(contactCursor.getInt(1), contactCursor.getInt(2), contactCursor.getInt(3));
         contact.setPhone(contactCursor.getString(4));
         contact.setPhoto(Uri.parse(contactCursor.getString(5)));
+        contactCursor.close();
 
         return contact;
     }

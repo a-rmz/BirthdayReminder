@@ -6,6 +6,7 @@ package com.rabidraccoon.birthdayreminder.utils;
 public class PhoneUtils {
 
     public static String formatPhone(String phone) {
+        if(phone == null) return null;
         String formatted = phone;
 
         formatted = formatted.replace("-", "");

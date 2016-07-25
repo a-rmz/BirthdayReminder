@@ -39,7 +39,7 @@ public class ContactCursorAdapter extends CursorAdapter {
 
         contactName.setText(cursor.getString(1));
         contactBirthday.setText(DateUtils.toHuman(cursor.getInt(2), cursor.getInt(3)));
-        if(cursor.getString(6) != null) {
+        if(!cursor.getString(6).equals("")) {
             contactThumb.setImageURI(Uri.parse(cursor.getString(6)));
         } else {
             contactThumb.setImageDrawable(context.getResources().getDrawable(R.drawable.profile, null));

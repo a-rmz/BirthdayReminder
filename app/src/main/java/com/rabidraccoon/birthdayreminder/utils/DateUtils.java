@@ -33,6 +33,28 @@ public class DateUtils {
         return months_en[month-1] + ", " + day;
     }
 
+    public static int calculateAge(Contact contact) {
+        int year = contact.getYear();
+        if(year == -1) return year;
+
+        int day = contact.getDay();
+        int month = contact.getMonth();
+
+        Calendar dob = Calendar.getInstance();
+        dob.set(year, month-1, day);
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+        if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
+            age--;
+        } else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)
+                && today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
+            age--;
+        }
+
+        return age;
+    }
+/*
     public static int calculateAge(String dateString) {
         int year = getYear(dateString);
         int month = getMonth(dateString);
@@ -52,18 +74,30 @@ public class DateUtils {
         }
 
         return age;
-    }
+    }*/
 
     public static int getDay(String date) {
-        return Integer.parseInt(date.substring(8, 10));
+        if(date.length() < 10) {
+            return Integer.parseInt(date.substring(5, 7));
+        } else {
+            return Integer.parseInt(date.substring(8, 10));
+        }
     }
 
     public static int getMonth(String date) {
-        return Integer.parseInt(date.substring(5, 7));
+        if(date.length() < 10) {
+            return Integer.parseInt(date.substring(2, 4));
+        } else {
+            return Integer.parseInt(date.substring(5, 7));
+        }
     }
 
     public static int getYear(String date) {
-        return Integer.parseInt(date.substring(0, 4));
+        if(date.length() < 10) {
+            return -1;
+        } else {
+            return Integer.parseInt(date.substring(0, 4));
+        }
     }
 
     public static int isSameMonth(int month1, int month2) {

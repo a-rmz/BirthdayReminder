@@ -72,6 +72,7 @@ public class Contact implements Parcelable {
         this.day = day;
         this.month = month;
         this.year = year;
+        this.date = day + "-" + month + "-" + ((this.year != 0) ? year : "-");
     }
 
     public String getPhone() {
@@ -79,7 +80,7 @@ public class Contact implements Parcelable {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = PhoneUtils.formatPhone(phone);
     }
 
     public Uri getPhoto() {
@@ -88,6 +89,10 @@ public class Contact implements Parcelable {
 
     public void setPhoto(Uri photo) {
         this.photo = (!photo.equals("")) ? photo : null;
+    }
+
+    public void setPhoto(String photo) {
+        setPhoto((photo != null) ? Uri.parse(photo) : Uri.parse(""));
     }
 
     public int getDay() {
