@@ -136,7 +136,8 @@ public class ActivityMain extends Activity {
 
             // Query local db for already stored contacts' IDs
             DBOperations localdb = new DBOperations(getApplicationContext());
-            localdb.resetDB();
+            // For debug purposes only
+//            localdb.resetDB();
 
             List<Integer> localContacts = localdb.getContactIDs();
 
