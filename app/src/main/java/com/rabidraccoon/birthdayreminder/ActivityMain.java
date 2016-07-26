@@ -47,15 +47,19 @@ public class ActivityMain extends Activity {
         setContentView(R.layout.activity_main);
         contactList = (FragmentContactList) getFragmentManager().findFragmentByTag("list");
 
-        new ContactLoader().execute();
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setLogo(R.drawable.ic_cake_white_24dp);
+        toolbar.setLogo(R.mipmap.ic_launcher);
         toolbar.setTitle(getString(R.string.app_name));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         toolbar.inflateMenu(R.menu.activity_main);
         setActionBar(toolbar);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new ContactLoader().execute();
     }
 
     @Override

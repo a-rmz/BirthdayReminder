@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:tag="detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:padding="@dimen/activity_horizontal_margin"
+    android:tag="detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/contact_detail_image"
-            android:layout_width="@dimen/contact_image_size"
-            android:layout_height="@dimen/contact_image_size"
+            android:layout_width="@dimen/contact_image_size_land"
+            android:layout_height="@dimen/contact_image_size_land"
             android:layout_centerHorizontal="true"
             android:src="@drawable/profile"/>
 
@@ -23,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/contact_name_caption"
             style="@style/Base.TextAppearance.AppCompat.Title"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

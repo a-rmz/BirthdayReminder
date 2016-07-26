@@ -4,5 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="list_fragment_size">250dp</dimen>
     <dimen name="contact_image_size">200dp</dimen>
+    <dimen name="contact_image_size_land">150dp</dimen>
     <dimen name="contact_image_thumb">50dp</dimen>
 </resources>
